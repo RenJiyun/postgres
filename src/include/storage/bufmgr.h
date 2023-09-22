@@ -169,6 +169,8 @@ extern PrefetchBufferResult PrefetchBuffer(Relation reln, ForkNumber forkNum,
 										   BlockNumber blockNum);
 extern bool ReadRecentBuffer(RelFileLocator rlocator, ForkNumber forkNum,
 							 BlockNumber blockNum, Buffer recent_buffer);
+
+// where we can use the Buffer to get the block, then the page structure
 extern Buffer ReadBuffer(Relation reln, BlockNumber blockNum);
 extern Buffer ReadBufferExtended(Relation reln, ForkNumber forkNum,
 								 BlockNumber blockNum, ReadBufferMode mode,
@@ -323,6 +325,8 @@ BufferGetBlock(Buffer buffer)
 	if (BufferIsLocal(buffer))
 		return LocalBufferBlockPointers[-buffer - 1];
 	else
+		// shared buffer start from the index of 1, 0 is invalid
+		// BufferBlocks is the start address of the shared buffer, it is very important
 		return (Block) (BufferBlocks + ((Size) (buffer - 1)) * BLCKSZ);
 }
 

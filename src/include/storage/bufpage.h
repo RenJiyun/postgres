@@ -75,6 +75,7 @@
  * fields.
  */
 
+// #question: how to iterate over all the tuples on a page
 typedef Pointer Page;
 
 

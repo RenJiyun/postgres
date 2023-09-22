@@ -106,3 +106,5 @@ BlockIdGetBlockNumber(const BlockIdData *blockId)
 }
 
 #endif							/* BLOCK_H */
+
+// #question: what is the relation between block and page?

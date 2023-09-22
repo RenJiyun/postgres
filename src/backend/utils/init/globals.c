@@ -110,6 +110,8 @@ pid_t		PostmasterPid = 0;
  * These are initialized for the bootstrap/standalone case.
  */
 bool		IsPostmasterEnvironment = false;
+
+// 是否在主进程中? not sure
 bool		IsUnderPostmaster = false;
 bool		IsBinaryUpgrade = false;
 bool		IsBackgroundWorker = false;

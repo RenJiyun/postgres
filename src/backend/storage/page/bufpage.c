@@ -37,6 +37,8 @@ bool		ignore_checksum_failure = false;
  *		Initializes the contents of a page.
  *		Note that we don't calculate an initial checksum here; that's not done
  *		until it's time to write.
+ * 
+ * #question: where we can get a page?
  */
 void
 PageInit(Page page, Size pageSize, Size specialSize)
