@@ -452,13 +452,20 @@ extern TimestampTz GetCurrentTransactionStopTimestamp(void);
 extern void SetCurrentStatementStartTimestamp(void);
 extern int	GetCurrentTransactionNestLevel(void);
 extern bool TransactionIdIsCurrentTransactionId(TransactionId xid);
+
+// #question: related to the side effect of the command executed in the transaction
 extern void CommandCounterIncrement(void);
 extern void ForceSyncCommit(void);
+
+// before execute a command, should execute StartTransactionCommand
 extern void StartTransactionCommand(void);
 extern void SaveTransactionCharacteristics(SavedTransactionCharacteristics *s);
 extern void RestoreTransactionCharacteristics(const SavedTransactionCharacteristics *s);
 extern void CommitTransactionCommand(void);
 extern void AbortCurrentTransaction(void);
+
+/////////////////////////////////////////////////////////////////////////////////
+// 事务系统的顶层函数, 由用户发起
 extern void BeginTransactionBlock(void);
 extern bool EndTransactionBlock(bool chain);
 extern bool PrepareTransactionBlock(const char *gid);
@@ -468,6 +475,8 @@ extern void EndImplicitTransactionBlock(void);
 extern void ReleaseSavepoint(const char *name);
 extern void DefineSavepoint(const char *name);
 extern void RollbackToSavepoint(const char *name);
+/////////////////////////////////////////////////////////////////////////////////
+
 extern void BeginInternalSubTransaction(const char *name);
 extern void ReleaseCurrentSubTransaction(void);
 extern void RollbackAndReleaseCurrentSubTransaction(void);

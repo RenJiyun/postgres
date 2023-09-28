@@ -339,6 +339,9 @@ static void CallSubXactCallbacks(SubXactEvent event,
 static void CleanupTransaction(void);
 static void CheckTransactionBlock(bool isTopLevel, bool throwError,
 								  const char *stmtType);
+
+//////////////////////////////////////////////////////////////////////////////
+// 事务系统底层函数
 static void CommitTransaction(void);
 static TransactionId RecordTransactionAbort(bool isSubXact);
 static void StartTransaction(void);
@@ -1094,6 +1097,8 @@ CommandCounterIncrement(void)
 			elog(ERROR, "cannot start commands during a parallel operation");
 
 		currentCommandId += 1;
+		
+		// 溢出的情形
 		if (currentCommandId == InvalidCommandId)
 		{
 			currentCommandId -= 1;
@@ -1998,6 +2003,7 @@ StartTransaction(void)
 	/*
 	 * Let's just make sure the state stack is empty
 	 */
+	// 只有处于 TBLOCK_DEFAULT 状态才会调用该方法, 由外层的状态机决定
 	s = &TopTransactionStateData;
 	CurrentTransactionState = s;
 
@@ -2068,6 +2074,7 @@ StartTransaction(void)
 	 */
 	s->subTransactionId = TopSubTransactionId;
 	currentSubTransactionId = TopSubTransactionId;
+
 	currentCommandId = FirstCommandId;
 	currentCommandIdUsed = false;
 
@@ -3057,6 +3064,7 @@ CommitTransactionCommand(void)
 			 * If we aren't in a transaction block, just do our usual
 			 * transaction commit, and return to the idle state.
 			 */
+			// 用户没有显式开启事务
 		case TBLOCK_STARTED:
 			CommitTransaction();
 			s->blockState = TBLOCK_DEFAULT;

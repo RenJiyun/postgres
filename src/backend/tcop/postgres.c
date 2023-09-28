@@ -2746,8 +2746,11 @@ exec_describe_portal_message(const char *portal_name)
 static void
 start_xact_command(void)
 {
+	// postgres 是一个多进程架构
+	// xact_started 为每个进程私有
 	if (!xact_started)
 	{
+		// #question: what is the purpose of this?
 		StartTransactionCommand();
 
 		xact_started = true;
@@ -4414,6 +4417,9 @@ PostgresMain(const char *dbname, const char *username)
 	if (!ignore_till_sync)
 		send_ready_for_query = true;	/* initially, or after error */
 
+
+	///////////////////////////////////////////////////////////////////////////////
+	// 主流程
 	/*
 	 * Non-error queries loop here.
 	 */
