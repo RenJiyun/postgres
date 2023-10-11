@@ -112,6 +112,7 @@ typedef struct ResourceArray
 /*
  * ResourceOwner objects look like this
  */
+// #question: how can i register the resource used to this struct?
 typedef struct ResourceOwnerData
 {
 	ResourceOwner parent;		/* NULL if no parent (toplevel owner) */
@@ -542,6 +543,7 @@ ResourceOwnerReleaseInternal(ResourceOwner owner,
 		 * buffer entry from our array, so we just have to iterate till there
 		 * are none.
 		 *
+		 * #question: when the buffer is released?
 		 * During a commit, there shouldn't be any remaining pins --- that
 		 * would indicate failure to clean up the executor correctly --- so
 		 * issue warnings.  In the abort case, just clean up quietly.

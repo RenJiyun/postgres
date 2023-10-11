@@ -2186,6 +2186,8 @@ GetSnapshotDataReuse(Snapshot snapshot)
  * Note: this function should probably not be called with an argument that's
  * not statically allocated (see xip allocation below).
  */
+// actually, here we get the transaction context currently
+// #question: 最终通过 AM 获取数据的时候, 是如何使用该上下文的?
 Snapshot
 GetSnapshotData(Snapshot snapshot)
 {

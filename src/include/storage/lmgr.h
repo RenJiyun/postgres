@@ -19,6 +19,7 @@
 #include "storage/lock.h"
 #include "utils/rel.h"
 
+// #question: what is the lock protocol here?
 
 /* XactLockTableWait operations */
 typedef enum XLTW_Oper

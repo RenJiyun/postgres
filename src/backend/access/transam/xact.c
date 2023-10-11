@@ -135,6 +135,8 @@ static TransactionId *ParallelCurrentXids;
  */
 int			MyXactFlags;
 
+
+// #question: 事务的状态受哪些因素的影响?
 /*
  *	transaction states - transaction state from server perspective
  */
@@ -192,11 +194,15 @@ typedef struct TransactionStateData
 	SubTransactionId subTransactionId;	/* my subxact ID */
 	char	   *name;			/* savepoint name, if any */
 	int			savepointLevel; /* savepoint level */
+
+	// #question: why the transaction system need two state variables?
 	TransState	state;			/* low-level state */
 	TBlockState blockState;		/* high-level state */
 	int			nestingLevel;	/* transaction nesting depth */
 	int			gucNestLevel;	/* GUC context nesting depth */
 	MemoryContext curTransactionContext;	/* my xact-lifetime context */
+
+	// 通过该 ResourceOwner 可以找到该事务所拥有的所有资源
 	ResourceOwner curTransactionOwner;	/* my query resources */
 	TransactionId *childXids;	/* subcommitted child XIDs, in XID order */
 	int			nChildXids;		/* # of subcommitted child XIDs */
@@ -2003,7 +2009,6 @@ StartTransaction(void)
 	/*
 	 * Let's just make sure the state stack is empty
 	 */
-	// 只有处于 TBLOCK_DEFAULT 状态才会调用该方法, 由外层的状态机决定
 	s = &TopTransactionStateData;
 	CurrentTransactionState = s;
 
@@ -2952,6 +2957,9 @@ StartTransactionCommand(void)
 			 * transaction.
 			 */
 		case TBLOCK_DEFAULT:
+			// we need to start a transaction whenever the user execute the BEGIN command or not
+			// and the StartTransaction() function will do a lot of prepare work
+			// #question: StartTransaction() 做了哪些准备工作?
 			StartTransaction();
 			s->blockState = TBLOCK_STARTED;
 			break;
@@ -3064,7 +3072,7 @@ CommitTransactionCommand(void)
 			 * If we aren't in a transaction block, just do our usual
 			 * transaction commit, and return to the idle state.
 			 */
-			// 用户没有显式开启事务
+			// transaction block is opened by the user using BEGIN command explicitly
 		case TBLOCK_STARTED:
 			CommitTransaction();
 			s->blockState = TBLOCK_DEFAULT;
