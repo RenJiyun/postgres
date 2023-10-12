@@ -406,6 +406,7 @@ heapgetpage(TableScanDesc sscan, BlockNumber block)
 									   RBM_NORMAL, scan->rs_strategy);
 	scan->rs_cblock = block;
 
+	// #question
 	if (!(scan->rs_base.rs_flags & SO_ALLOW_PAGEMODE))
 		return;
 
