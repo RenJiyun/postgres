@@ -1400,6 +1400,7 @@ heap_fetch(Relation relation,
 	if (!ItemIdIsNormal(lp))
 	{
 		LockBuffer(buffer, BUFFER_LOCK_UNLOCK);
+		// unpin the buffer
 		ReleaseBuffer(buffer);
 		*userbuf = InvalidBuffer;
 		tuple->t_data = NULL;
