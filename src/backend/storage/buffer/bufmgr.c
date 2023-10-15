@@ -3393,6 +3393,7 @@ FlushBuffer(BufferDesc *buf, SMgrRelation reln, IOObject io_object,
 	buf_state &= ~BM_JUST_DIRTIED;
 	UnlockBufHdr(buf, buf_state);
 
+	///////////////////////////////////// WAL 协议 ////////////////////////////
 	/*
 	 * Force XLOG flush up to buffer's LSN.  This implements the basic WAL
 	 * rule that log updates must hit disk before any of the data-file changes
