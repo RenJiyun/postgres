@@ -19,6 +19,7 @@ typedef uint8 RmgrId;
  * Note: RM_MAX_ID must fit in RmgrId; widening that type will affect the XLOG
  * file format.
  */
+// rmgr.c 中也有一个同名宏的定义, 这样做仅仅是一个技术手段, 在这里为了定义资源管理器的枚举值, 也就是 symname
 #define PG_RMGR(symname,name,redo,desc,identify,startup,cleanup,mask,decode) \
 	symname,
 

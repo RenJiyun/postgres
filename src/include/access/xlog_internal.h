@@ -345,6 +345,7 @@ struct XLogRecordBuffer;
  * RmgrTable[] is indexed by RmgrId values (see rmgrlist.h). If rm_name is
  * NULL, the corresponding RmgrTable entry is considered invalid.
  */
+// #question: take the WAL Log as a resource, what is the benifit of this design?
 typedef struct RmgrData
 {
 	const char *rm_name;
