@@ -239,6 +239,7 @@ XLogResetInsertion(void)
  * Register a reference to a buffer with the WAL record being constructed.
  * This must be called for every page that the WAL-logged operation modifies.
  */
+// #question: what is the pre-condition for this function? and why heapam.c call this function with block_id = 0?
 void
 XLogRegisterBuffer(uint8 block_id, Buffer buffer, uint8 flags)
 {
