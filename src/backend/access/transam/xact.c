@@ -1466,6 +1466,7 @@ RecordTransactionCommit(void)
 		 synchronous_commit > SYNCHRONOUS_COMMIT_OFF) ||
 		forceSyncCommit || nrels > 0)
 	{
+		// 同步提交情形
 		XLogFlush(XactLastRecEnd);
 
 		/*
@@ -1476,6 +1477,7 @@ RecordTransactionCommit(void)
 	}
 	else
 	{
+		// 异步提交情形
 		/*
 		 * Asynchronous commit case:
 		 *
@@ -2165,6 +2167,7 @@ CommitTransaction(void)
 	TransactionId latestXid;
 	bool		is_parallel_worker;
 
+	// #question: parallel worker means what?
 	is_parallel_worker = (s->blockState == TBLOCK_PARALLEL_INPROGRESS);
 
 	/* Enforce parallel mode restrictions during parallel worker commit. */
@@ -2268,6 +2271,7 @@ CommitTransaction(void)
 	s->state = TRANS_COMMIT;
 	s->parallelModeLevel = 0;
 
+	// #question: see the parallel worker
 	if (!is_parallel_worker)
 	{
 		/*

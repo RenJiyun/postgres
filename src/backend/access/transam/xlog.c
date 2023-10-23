@@ -456,6 +456,7 @@ typedef struct XLogCtlInsert
 /*
  * Total shared-memory state for XLOG.
  */
+// the control data for xlog mechanism
 typedef struct XLogCtlData
 {
 	XLogCtlInsert Insert;
@@ -2509,6 +2510,7 @@ UpdateMinRecoveryPoint(XLogRecPtr lsn, bool force)
  * NOTE: this differs from XLogWrite mainly in that the WALWriteLock is not
  * already held, and we try to avoid acquiring it if possible.
  */
+// #question: who will call this function?
 void
 XLogFlush(XLogRecPtr record)
 {
