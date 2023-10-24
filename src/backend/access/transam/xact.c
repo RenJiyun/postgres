@@ -192,12 +192,17 @@ typedef struct TransactionStateData
 {
 	FullTransactionId fullTransactionId;	/* my FullTransactionId */
 	SubTransactionId subTransactionId;	/* my subxact ID */
+	
+	// we have to give a name here, because the user can 
+	// rollback to a savepoint which defined before
 	char	   *name;			/* savepoint name, if any */
 	int			savepointLevel; /* savepoint level */
 
 	// #question: why the transaction system need two state variables?
 	TransState	state;			/* low-level state */
 	TBlockState blockState;		/* high-level state */
+
+	// count from 1, greater than 1 means we are in a subtransaction
 	int			nestingLevel;	/* transaction nesting depth */
 	int			gucNestLevel;	/* GUC context nesting depth */
 	MemoryContext curTransactionContext;	/* my xact-lifetime context */
@@ -213,6 +218,8 @@ typedef struct TransactionStateData
 	int			parallelModeLevel;	/* Enter/ExitParallelMode counter */
 	bool		chain;			/* start a new block after this one */
 	bool		topXidLogged;	/* for a subxact: is top-level XID logged? */
+
+	// #question: for subtransaction?
 	struct TransactionStateData *parent;	/* back link to parent */
 } TransactionStateData;
 
@@ -261,6 +268,7 @@ static TransactionState CurrentTransactionState = &TopTransactionStateData;
  * The subtransaction ID and command ID assignment counters are global
  * to a whole transaction, so we do not keep them in the state stack.
  */
+// 进程内部内地分配, 特定于当前的顶层事务, 不存在竞争
 static SubTransactionId currentSubTransactionId;
 static CommandId currentCommandId;
 static bool currentCommandIdUsed;
@@ -1373,6 +1381,9 @@ RecordTransactionCommit(void)
 	}
 	else
 	{
+		// mostly we will enter here, because the xid is assigned, 
+		// so variable markXidCommitted is true
+		// and we will insert a commit record into WAL below.
 		bool		replorigin;
 
 		/*
@@ -1511,6 +1522,7 @@ RecordTransactionCommit(void)
 	}
 
 	/* Compute latestXid while we have the child XIDs handy */
+	// #question: how the child transaction is managed?
 	latestXid = TransactionIdLatest(xid, nchildren, children);
 
 	/*
@@ -4255,6 +4267,8 @@ DefineSavepoint(const char *name)
 		case TBLOCK_INPROGRESS:
 		case TBLOCK_SUBINPROGRESS:
 			/* Normal subtransaction start */
+			// here we will create a new transaction state, which is 
+			// the child of the current transaction state
 			PushTransaction();
 			s = CurrentTransactionState;	/* changed by push */
 
@@ -5295,9 +5309,13 @@ PushTransaction(void)
 	 */
 	s->fullTransactionId = InvalidFullTransactionId;	/* until assigned */
 	s->subTransactionId = currentSubTransactionId;
+
+	// 维护事务栈
 	s->parent = p;
 	s->nestingLevel = p->nestingLevel + 1;
 	s->gucNestLevel = NewGUCNestLevel();
+	
+	// #question: why the savepointLevel is the same as parent?
 	s->savepointLevel = p->savepointLevel;
 	s->state = TRANS_DEFAULT;
 	s->blockState = TBLOCK_SUBBEGIN;
@@ -5306,6 +5324,7 @@ PushTransaction(void)
 	s->parallelModeLevel = 0;
 	s->topXidLogged = false;
 
+	// change the current transaction state to subtransaction
 	CurrentTransactionState = s;
 
 	/*
