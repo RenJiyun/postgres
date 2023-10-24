@@ -3059,6 +3059,7 @@ RestoreTransactionCharacteristics(const SavedTransactionCharacteristics *s)
 /*
  *	CommitTransactionCommand
  */
+// #question: when here we will start a sub transaction?
 void
 CommitTransactionCommand(void)
 {
