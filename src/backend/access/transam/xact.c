@@ -5319,6 +5319,8 @@ PushTransaction(void)
 	// #question: why the savepointLevel is the same as parent?
 	s->savepointLevel = p->savepointLevel;
 	s->state = TRANS_DEFAULT;
+
+	// here we start a new transaction block
 	s->blockState = TBLOCK_SUBBEGIN;
 	GetUserIdAndSecContext(&s->prevUser, &s->prevSecContext);
 	s->prevXactReadOnly = XactReadOnly;
