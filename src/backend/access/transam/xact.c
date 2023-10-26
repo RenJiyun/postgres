@@ -2973,7 +2973,6 @@ StartTransactionCommand(void)
 		case TBLOCK_DEFAULT:
 			// we need to start a transaction whenever the user execute the BEGIN command or not
 			// and the StartTransaction() function will do a lot of prepare work
-			// #question: StartTransaction() 做了哪些准备工作?
 			StartTransaction();
 			s->blockState = TBLOCK_STARTED;
 			break;
