@@ -2194,6 +2194,8 @@ CommitTransaction(void)
 	if (s->state != TRANS_INPROGRESS)
 		elog(WARNING, "CommitTransaction while in %s state",
 			 TransStateAsString(s->state));
+
+	// we must in the top transaction block
 	Assert(s->parent == NULL);
 
 	/*
