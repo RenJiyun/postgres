@@ -112,7 +112,6 @@ typedef struct ResourceArray
 /*
  * ResourceOwner objects look like this
  */
-// #question: how can i register the resource used to this struct?
 typedef struct ResourceOwnerData
 {
 	ResourceOwner parent;		/* NULL if no parent (toplevel owner) */

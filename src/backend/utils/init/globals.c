@@ -111,7 +111,8 @@ pid_t		PostmasterPid = 0;
  */
 bool		IsPostmasterEnvironment = false;
 
-// 是否在主进程中? not sure
+// is in the child process of postmaster, which is the backend process
+// every backend process will handle the client request
 bool		IsUnderPostmaster = false;
 bool		IsBinaryUpgrade = false;
 bool		IsBackgroundWorker = false;

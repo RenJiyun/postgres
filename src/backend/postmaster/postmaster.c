@@ -4458,6 +4458,8 @@ BackendRun(Port *port)
 	/*
 	 * Make sure we aren't in PostmasterContext anymore.  (We can't delete it
 	 * just yet, though, because InitPostgres will need the HBA data.)
+	 * 
+	 * #question: what is HBA data?
 	 */
 	MemoryContextSwitchTo(TopMemoryContext);
 
