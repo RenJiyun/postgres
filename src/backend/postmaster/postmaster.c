@@ -1069,6 +1069,7 @@ PostmasterMain(int argc, char *argv[])
 	 * normally choose the same IPC keys.  This helps ensure that we will
 	 * clean up dead IPC objects if the postmaster crashes and is restarted.
 	 */
+	// 初始化共享内存结构, 需要保持各个进程间内存地址的对齐
 	CreateSharedMemoryAndSemaphores();
 
 	/*
