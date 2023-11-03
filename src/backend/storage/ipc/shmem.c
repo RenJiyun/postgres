@@ -77,6 +77,8 @@
 
 static void *ShmemAllocRaw(Size size, Size *allocated_size);
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
+// 所有进程间共享内存相关的一些全局变量
 /* shared memory global variables */
 
 static PGShmemHeader *ShmemSegHdr;	/* shared mem segment header */
@@ -90,6 +92,7 @@ slock_t    *ShmemLock;			/* spinlock for shared memory and LWLock
 
 static HTAB *ShmemIndex = NULL; /* primary index hashtable for shmem */
 
+//////////////////////////////////////////////////////////////////////////////////////////////////
 
 /*
  *	InitShmemAccess() --- set up basic pointers to shared memory.

@@ -175,6 +175,7 @@ CreateSharedMemoryAndSemaphores(void)
 {
 	PGShmemHeader *shim = NULL;
 
+	// 主进程情形
 	if (!IsUnderPostmaster)
 	{
 		PGShmemHeader *seghdr;
@@ -222,6 +223,8 @@ CreateSharedMemoryAndSemaphores(void)
 	if (!IsUnderPostmaster)
 		InitShmemAllocation();
 
+	/////////////////////////////////////////////////////////////////////////////////
+	// 以下部分无论是主进程还是后台进程都会执行
 	/*
 	 * Now initialize LWLocks, which do shared memory allocation and are
 	 * needed for InitShmemIndex.
@@ -294,6 +297,8 @@ CreateSharedMemoryAndSemaphores(void)
 	SyncScanShmemInit();
 	AsyncShmemInit();
 	StatsShmemInit();
+
+	/////////////////////////////////////////////////////////////////////////////////
 
 #ifdef EXEC_BACKEND
 

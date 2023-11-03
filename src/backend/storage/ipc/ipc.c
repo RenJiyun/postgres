@@ -77,6 +77,8 @@ struct ONEXIT
 };
 
 static struct ONEXIT on_proc_exit_list[MAX_ON_EXITS];
+
+// 退出回调
 static struct ONEXIT on_shmem_exit_list[MAX_ON_EXITS];
 static struct ONEXIT before_shmem_exit_list[MAX_ON_EXITS];
 

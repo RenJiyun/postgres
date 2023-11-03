@@ -152,6 +152,7 @@ InternalIpcMemoryCreate(IpcMemoryKey memKey, Size size)
 	}
 #endif
 
+	// 系统调用
 	shmid = shmget(memKey, size, IPC_CREAT | IPC_EXCL | IPCProtection);
 
 	if (shmid < 0)
@@ -838,6 +839,8 @@ PGSharedMemoryCreate(Size size,
 	 * Initialize space allocation status for segment.
 	 */
 	hdr->totalsize = size;
+
+	// 除去 header 之后的可用起始地址
 	hdr->freeoffset = MAXALIGN(sizeof(PGShmemHeader));
 	*shim = hdr;
 
